@@ -67,20 +67,20 @@ def predict_grade_with_rules(row, df):
         grade_points += 1
 
     # Rule based on hours studied
-    if hoursStudied >= averageHoursStudied * 1.1:  
+    if hoursStudied >= averageHoursStudied * 1.3:  
         grade_points += 3  
-    elif hoursStudied >= averageHoursStudied:
+    elif hoursStudied >= averageHoursStudied * 0.9:
         grade_points += 2  
-    elif hoursStudied >= averageHoursStudied * 0.8:
+    elif hoursStudied >= averageHoursStudied * 0.5:
         grade_points += 1
     else:
-        grade_points -= 1
+        grade_points -= 0
     
     # Rule based on attendance
     if attendance >= averageAttendance * 1.0:
-        grade_points += 3 
+        grade_points += 2 
     elif attendance >= averageAttendance * 0.8:
-        grade_points += 0.5  
+        grade_points += 0  
     
     # Rule based on parental involvement
     if parentalInvolvement == "High":
@@ -88,11 +88,11 @@ def predict_grade_with_rules(row, df):
     elif parentalInvolvement == "Medium":
         grade_points += 1  
     elif parentalInvolvement == "Low":
-        grade_points += 0
+        grade_points += 1
     
     # Rule based on sleep hours
-    if sleepHours <= averageSleepHours * 0.8:
-        grade_points -= 0 
+    if sleepHours <= averageSleepHours * 0.5:
+        grade_points -= 2
     
     # Rule based on tutoring sessions
     if tutoringSessions >= averageTutoringSessions:
@@ -108,7 +108,7 @@ def predict_grade_with_rules(row, df):
 
     # Rule based on learning difficulties
     if learningDifficulties == "Yes":
-        grade_points -= 1
+        grade_points -= 0
     elif learningDifficulties == "No":
         grade_points += 0
     
@@ -119,7 +119,7 @@ def predict_grade_with_rules(row, df):
         return 'B'
     elif grade_points >= 8:
         return 'C'
-    elif grade_points >= 6:
+    elif grade_points >= 5:
         return 'D'
     else:
         return 'F'
