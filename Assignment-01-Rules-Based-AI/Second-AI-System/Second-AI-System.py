@@ -36,7 +36,7 @@ def predict_grade_with_rules(row, df):
     
     # Define rules based on previous scores
     if previousScores >= averagePreviousScores * 1.3:
-        grade_points += 3  
+        grade_points += 3 
     elif previousScores >= averagePreviousScores:
         grade_points += 2  
     elif previousScores >= averagePreviousScores * 0.6:
@@ -48,11 +48,11 @@ def predict_grade_with_rules(row, df):
     elif accessToResources == "Medium":
         grade_points += 1
     elif accessToResources == "Low":
-        grade_points += 0
+        grade_points += 1
     
     # Rule based on extracurricular activities
     if extracurricularActivities == "Yes":
-        grade_points += 1
+        grade_points += 0
     else:
         grade_points += 0
     
@@ -62,7 +62,7 @@ def predict_grade_with_rules(row, df):
     elif motivationLevel == "Medium":
         grade_points += 2
     elif motivationLevel == "Low":
-        grade_points += 1
+        grade_points += 2
 
     # Rule based on hours studied
     if hoursStudied >= averageHoursStudied * 1.3:  
@@ -78,15 +78,15 @@ def predict_grade_with_rules(row, df):
     if attendance >= averageAttendance * 1.0:
         grade_points += 2 
     elif attendance >= averageAttendance * 0.8:
-        grade_points += 0  
+        grade_points += 1 
     
     # Rule based on parental involvement
     if parentalInvolvement == "High":
-        grade_points += 2
+        grade_points += 1
     elif parentalInvolvement == "Medium":
         grade_points += 1  
     elif parentalInvolvement == "Low":
-        grade_points += 1
+        grade_points += 0
     
     # Rule based on sleep hours
     if sleepHours <= averageSleepHours * 0.5:
@@ -115,9 +115,9 @@ def predict_grade_with_rules(row, df):
         return 'A'
     elif grade_points >= 13:
         return 'B'
-    elif grade_points >= 8:
+    elif grade_points >= 7:
         return 'C'
-    elif grade_points >= 5:
+    elif grade_points >= 4:
         return 'D'
     else:
         return 'F'
