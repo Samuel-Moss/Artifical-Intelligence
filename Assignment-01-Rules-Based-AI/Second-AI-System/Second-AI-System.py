@@ -1,13 +1,13 @@
 import pandas as pd 
 
 def assume_grade(score):
-    if score >= 75:
+    if score >= 80:
         return 'A'
-    elif score >= 70:
+    elif score >= 71:
         return 'B'
-    elif score >= 60:
+    elif score >= 63:
         return 'C'
-    elif score >= 50:
+    elif score >= 60:
         return 'D'
     else:
         return 'F'
