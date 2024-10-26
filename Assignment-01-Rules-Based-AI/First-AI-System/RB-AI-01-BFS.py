@@ -12,41 +12,60 @@ def assume_grade(score):
         return 'D'
     else:
         return 'F'
+    
 
-def basicDataAnalysis(df):
-    # The Average Score
-    # Students who fall below this may be areas of concern
-    # But consider Skewed Data Distribution (high scores raising the mean)
+def predict_grade(row, df):
+
+    # Some of these are unused!
+    score = row['Exam_Score']
+    hoursStudied = row['Hours_Studied']
+    attendance = row['Attendance']
+    parentalInvolement = row['Parental_Involvement']
+    accessToResources = row['Access_to_Resources']
+    preiousScores = row['Previous_Scores']
+    motivationLevel = row['Motivation_Level']
+    sleepHours = row['Sleep_Hours']
+
+    # Get Average values
     averageScore = df["Exam_Score"].mean()
+    averageHoursStudied = df["Hours_Studied"].mean()
 
-    # The Median Score (value in the middle)
-    # Students who fall below this are in the lower 50% of the class
-    medianScore = df["Exam_Score"].median()
-
-    # The Mode Score (most common value)
-    # Good indicator to see students scoring lower than the most common value, possibly underperforming
-    # [0] on the end is only to get the first mode to prevent multiple values from being returned
-    modeScore = df["Exam_Score"].mode()[0]
-
-    print("The Mean (average) score is: " + str(averageScore))
-    print("The Median of the score is: " + str(medianScore))
-    print("The Mode score is: " + str(modeScore))
+        # Attendance
+            # If attendance is 1.5x the average, predict A
+            # If attendance is 1.2x the average, predict B
+    
+    # If Else stements to predict grades
+    if hoursStudied >= averageHoursStudied * 1.5 and attendance >= 90:
+        return 'A'
+    elif hoursStudied >= averageHoursStudied * 1.2 and attendance >= 80:
+        return 'B'
+    elif hoursStudied >= averageHoursStudied and attendance >= 70:
+        return 'C'
+    elif hoursStudied >= averageHoursStudied * 0.8 and attendance >= 60:
+        return 'D'
+    else:
+        return 'F'
 
 def main():
     # Import data file
     df = pd.read_csv('./data/StudentPerformanceFactors.csv')
 
     ## ChatGPT 4o: I have a function to assign grades in a new column, how do I add a new column using pandas to apply to each exam score?
-    
     # Apply the grading function to each student's score
-    df['Grade'] = df['Exam_Score'].apply(assume_grade)
+    df['Actual_Grade'] = df['Exam_Score'].apply(assume_grade)
 
     # Print the distribution of grades to the console
-    print(df['Grade'].value_counts())
+    print(df['Actual_Grade'].value_counts())
 
-    # Perform a basic data analysis of data
-    basicDataAnalysis(df)
+    ## ChatGPT 4o: I have a function to predict grades, how do I apply it to my dataframe? (python rules based AI)
+    # Apply the prediction function to the DataFrame
+    df['Predicted_Grade'] = df.apply(lambda row: predict_grade(row, df), axis=1)
 
+    # Print the predicted grades based on attendance
+    print(df[['Hours_Studied', 'Attendance', 'Predicted_Grade', 'Actual_Grade']])
+
+    # Print the distribution of predicted grades against their actual grade to console
+    print(df[['Predicted_Grade', 'Actual_Grade']].value_counts())
 
 # Run entry point
 main()
