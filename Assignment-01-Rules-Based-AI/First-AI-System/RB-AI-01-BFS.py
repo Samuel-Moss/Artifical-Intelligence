@@ -25,3 +25,25 @@ modeScore = df["Exam_Score"].mode()[0]
 print("The Mean (average) score is: " + str(averageScore))
 print("The Median of the score is: " + str(medianScore))
 print("The Mode score is: " + str(modeScore))
+
+
+# The data set has no indication of grades, so these are to fulfil the missing data
+def assume_grade(score):
+    if score >= 75:
+        return 'A'
+    elif score >= 70:
+        return 'B'
+    elif score >= 65:
+        return 'C'
+    elif score >= 60:
+        return 'D'
+    else:
+        return 'F'
+
+
+## ChatGPT 4o: I have a function to assign grades in a new column, how do I add a new column using pandas to apply to each exam score?
+# Apply the grading function to each student's score
+df['Grade'] = df['Exam_Score'].apply(assume_grade)
+
+# Check the distribution of grades
+print(df['Grade'].value_counts())
