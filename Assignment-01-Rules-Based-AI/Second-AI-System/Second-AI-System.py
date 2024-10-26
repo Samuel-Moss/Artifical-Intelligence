@@ -12,7 +12,7 @@ def assume_grade(score):
     else:
         return 'F'
 
-def predict_grade_with_rules(row):
+def predict_grade_with_rules(row, df):
     hoursStudied = row['Hours_Studied']
     attendance = row['Attendance']
     parentalInvolvement = row['Parental_Involvement']
@@ -24,16 +24,24 @@ def predict_grade_with_rules(row):
     tutoringSessions = row['Tutoring_Sessions']
     teacherQuality = row['Teacher_Quality']
     learningDifficulties = row['Learning_Disabilities']
+
+    averageHoursStudied = df['Hours_Studied'].mean()
+    averageAttendance = df['Attendance'].mean()
+    averagePreviousScores = df['Previous_Scores'].mean()
+    averageSleepHours = df['Sleep_Hours'].mean()
+    averageTutoringSessions = df['Tutoring_Sessions'].mean()
+
+
     
     # Initialize a score for grading
     grade_points = 0
     
     # Define rules based on previous scores
-    if previousScores >= 75:
+    if previousScores >= averagePreviousScores * 1.3:
         grade_points += 3  
-    elif previousScores >= 65:
+    elif previousScores >= averagePreviousScores:
         grade_points += 2  
-    elif previousScores >= 50:
+    elif previousScores >= averagePreviousScores * 0.6:
         grade_points += 1  
     
     # Rule based on access to resources
@@ -46,7 +54,7 @@ def predict_grade_with_rules(row):
     
     # Rule based on extracurricular activities
     if extracurricularActivities == "Yes":
-        grade_points += 2
+        grade_points += 1
     else:
         grade_points += 0
     
@@ -54,24 +62,24 @@ def predict_grade_with_rules(row):
     if motivationLevel == "High":
         grade_points += 2
     elif motivationLevel == "Medium":
-        grade_points += 1
+        grade_points += 2
     elif motivationLevel == "Low":
-        grade_points += 0
+        grade_points += 1
 
     # Rule based on hours studied
-    if hoursStudied >= 30:  
-        grade_points += 4  
-    elif hoursStudied >= 20:
+    if hoursStudied >= averageHoursStudied * 1.1:  
+        grade_points += 3  
+    elif hoursStudied >= averageHoursStudied:
         grade_points += 2  
-    elif hoursStudied >= 10:
+    elif hoursStudied >= averageHoursStudied * 0.8:
         grade_points += 1
     else:
         grade_points -= 1
     
     # Rule based on attendance
-    if attendance >= 90:
-        grade_points += 2 
-    elif attendance >= 75:
+    if attendance >= averageAttendance * 1.0:
+        grade_points += 3 
+    elif attendance >= averageAttendance * 0.8:
         grade_points += 0.5  
     
     # Rule based on parental involvement
@@ -83,16 +91,16 @@ def predict_grade_with_rules(row):
         grade_points += 0
     
     # Rule based on sleep hours
-    if sleepHours <= 6:
+    if sleepHours <= averageSleepHours * 0.8:
         grade_points -= 0 
     
     # Rule based on tutoring sessions
-    if tutoringSessions >= 2:
-        grade_points += 1  # Add points for having tutoring sessions
+    if tutoringSessions >= averageTutoringSessions:
+        grade_points += 1
 
     # Rule based on teacher quality
     if teacherQuality == "High":
-        grade_points += 2
+        grade_points += 1
     elif teacherQuality == "Medium":
         grade_points += 1
     elif teacherQuality == "Low":
@@ -105,7 +113,7 @@ def predict_grade_with_rules(row):
         grade_points += 0
     
     # Assign grade based on total grade points
-    if grade_points >= 18:
+    if grade_points >= 19:
         return 'A'
     elif grade_points >= 13:
         return 'B'
@@ -123,7 +131,7 @@ def main():
     df['Actual_Grade'] = df['Exam_Score'].apply(assume_grade)
 
     # Apply the rule-based prediction function to the DataFrame
-    df['Predicted_Grade'] = df.apply(predict_grade_with_rules, axis=1)
+    df['Predicted_Grade'] = df.apply(lambda row: predict_grade_with_rules(row, df), axis=1)
 
     # Print the distribution of predicted grades
     print(df[['Predicted_Grade', 'Actual_Grade']].value_counts())
