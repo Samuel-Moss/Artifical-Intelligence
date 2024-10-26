@@ -111,13 +111,13 @@ def predict_grade_with_rules(row, df):
         grade_points += 0
     
     # Assign grade based on total grade points
-    if grade_points >= 19:
+    if grade_points >= 14:
         return 'A'
     elif grade_points >= 13:
         return 'B'
-    elif grade_points >= 7:
+    elif grade_points >= 8:
         return 'C'
-    elif grade_points >= 4:
+    elif grade_points >= 7:
         return 'D'
     else:
         return 'F'
