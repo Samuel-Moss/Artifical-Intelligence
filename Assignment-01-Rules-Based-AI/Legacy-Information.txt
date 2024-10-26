@@ -1,0 +1,46 @@
+# Dataset link
+# https://www.kaggle.com/datasets/lainguyn123/student-performance-factors
+# Note: this dataset does not include a specific agee group
+
+
+# The Rules AI should predict final grades based on the following factors:
+# - Hours Studied
+# - Attendance
+# - Parental Involvement
+# - Access to Resources
+# - Extracurricular Activites
+# - Sleep Hours
+# - Previous Scores
+# - Motivation Level
+# - Internet Access
+# - Tutoring Sessions
+# - Family Income
+# - Teacher Quality
+# - School Type
+# - Peer Influence
+# - Physical Activity
+# - Learning Disabilites
+# - Distance from Home
+# - Gender
+# - Exam Score
+
+# Table:
+# Hours_Studied,Attendance,Parental_Involvement,Access_to_Resources,Extracurricular_Activities,Sleep_Hours,Previous_Scores,Motivation_Level,Internet_Access,Tutoring_Sessions,Family_Income,Teacher_Quality,School_Type,Peer_Influence,Physical_Activity,Learning_Disabilities,Parental_Education_Level,Distance_from_Home,Gender,Exam_ScoreHours_Studied,Attendance,Parental_Involvement,Access_to_Resources,Extracurricular_Activities,Sleep_Hours,Previous_Scores,Motivation_Level,Internet_Access,Tutoring_Sessions,Family_Income,Teacher_Quality,School_Type,Peer_Influence,Physical_Activity,Learning_Disabilities,Parental_Education_Level,Distance_from_Home,Gender,Exam_Score
+
+# I need to answer a question
+# How well can a students grade be predicted based on factors such as Hours Studied, Attendance, Gender, Parental Involvement, etc?
+
+
+# Hypothosis:
+
+# The following factors will have much less of an impact:
+# - Gender: Does not put any restraints on being able to study
+# - Family Income: Whilst this may associate with other factors, family income alone does not neccessarily mean access to resources in insufficent. Especially with schemes and measures in place
+
+# The following factors will have much more of an impact:
+# - Study Hours
+# - Motivation
+# - Internet Access (remember that this can be used negatively just as well as positively! - i.e. online games)
+
+# AI One:
+# BFS
