@@ -3,11 +3,11 @@ import pandas as pd
 def assume_grade(score):
     if score >= 80:
         return 'A'
-    elif score >= 71:
+    elif score >= 72:
         return 'B'
-    elif score >= 63:
+    elif score >= 61:
         return 'C'
-    elif score >= 60:
+    elif score >= 55:
         return 'D'
     else:
         return 'F'
@@ -30,8 +30,6 @@ def predict_grade_with_rules(row, df):
     averagePreviousScores = df['Previous_Scores'].mean()
     averageSleepHours = df['Sleep_Hours'].mean()
     averageTutoringSessions = df['Tutoring_Sessions'].mean()
-
-
     
     # Initialize a score for grading
     grade_points = 0
