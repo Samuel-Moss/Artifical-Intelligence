@@ -122,24 +122,39 @@ def predict_grade_with_rules(row, df):
     else:
         return 'F'
 
+
 def main():
     # Import data file
     df = pd.read_csv('./data/StudentPerformanceFactors.csv')
 
+    # Determine the actual and predicted grades
     df['Actual_Grade'] = df['Exam_Score'].apply(assume_grade)
-
-    # Apply the rule-based prediction function to the DataFrame
     df['Predicted_Grade'] = df.apply(lambda row: predict_grade_with_rules(row, df), axis=1)
 
-    # Print the distribution of predicted grades
-    print(df[['Predicted_Grade', 'Actual_Grade']].value_counts())
+    # Define the set of all possible grades
+    grade_categories = ['A', 'B', 'C', 'D', 'F']
 
 
-    # Calculate and print accuracy
-    correct_predictions = (df['Predicted_Grade'] == df['Actual_Grade']).sum()
-    accuracy = correct_predictions / len(df)
+    ## ChatGPT 4o: Rules based AI how do you assign calculations using a confsion matrix for multiple grades python 
 
-    print("Accuracy of the grade prediction:", accuracy)
+    # Create a table for the confusion matrix, actual (assumed) against predicted
+    confusion_matrix = pd.crosstab(df['Predicted_Grade'], df['Actual_Grade'], rownames=['Predicted'], colnames=['Actual'], dropna=False)
+    confusion_matrix = confusion_matrix.reindex(index=grade_categories, columns=grade_categories, fill_value=0)
 
-# Run entry point
+    # Calculate accuracy using maths
+    correct_predictions = sum(confusion_matrix.iloc[i, i] for i in range(len(grade_categories)))
+    total_predictions = confusion_matrix.values.sum()
+    accuracy = correct_predictions / total_predictions
+
+
+
+    # Output the Confusion Matrix for analystics purposes
+    # TODO: OUTPUT A DIAGRAM FOR ASSIGNMENT TO SHOW PERFORMANCE
+    # TODO: TEST AGAINST ANOTHER DATASET
+    print("Confusion Matrix:")
+    print(confusion_matrix)
+    print("\nAccuracy of the grade prediction:", accuracy)
+
+
+# Run the main function
 main()
