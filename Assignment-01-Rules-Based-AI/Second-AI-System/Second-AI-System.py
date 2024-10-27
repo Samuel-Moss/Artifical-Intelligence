@@ -4,7 +4,7 @@ import seaborn as sns
 import pandas as pd 
 
 def assume_grade(score):
-    if score >= 75:
+    if score >= 76:
         return 'A'
     elif score >= 71:
         return 'B'
@@ -94,7 +94,7 @@ def predict_grade_with_rules(row, df):
     # Rule based on sleep hours
     if sleepHours <= averageSleepHours * 0.5:
         grade_points -= 2
-    
+
     # Rule based on tutoring sessions
     if tutoringSessions >= averageTutoringSessions:
         grade_points += 1
@@ -124,28 +124,6 @@ def predict_grade_with_rules(row, df):
         return 'D'
     else:
         return 'F'
-
-def main():
-    # Import data file
-    df = pd.read_csv('./data/StudentPerformanceFactors.csv')
-
-    df['Actual_Grade'] = df['Exam_Score'].apply(assume_grade)
-
-    # Apply the rule-based prediction function to the DataFrame
-    df['Predicted_Grade'] = df.apply(lambda row: predict_grade_with_rules(row, df), axis=1)
-
-    # Print the distribution of predicted grades
-    print(df[['Predicted_Grade', 'Actual_Grade']].value_counts())
-
-
-    # Calculate and print accuracy
-    correct_predictions = (df['Predicted_Grade'] == df['Actual_Grade']).sum()
-    accuracy = correct_predictions / len(df)
-
-    print("Accuracy of the grade prediction:", accuracy)
-
-# Run entry point
-main()
 
 
 def main():
