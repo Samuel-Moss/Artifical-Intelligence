@@ -1,7 +1,6 @@
 import pandas as pd 
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pandas as pd 
 
 def assume_grade(score):
     if score >= 76:
