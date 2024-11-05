@@ -8,6 +8,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
+
 
 # The data set has no indication of grades, so these are to fulfill the missing data
 def assume_grade(score):
@@ -88,13 +90,23 @@ def main():
     correct_predictions = sum(confusion_matrix.iloc[i, i] for i in range(len(grade_categories)))
     total_predictions = confusion_matrix.values.sum()
 
-    # Calculate Accuracy
-    accuracy = correct_predictions / total_predictions
+    # Calculate and print additional metrics
+    precision = precision_score(df['Assumed_Grade'], df['Predicted_Grade'], average='macro')
+    recall = recall_score(df['Assumed_Grade'], df['Predicted_Grade'], average='macro')
+    f1 = f1_score(df['Assumed_Grade'], df['Predicted_Grade'], average='macro')
+    accuracy = accuracy_score(df['Assumed_Grade'], df['Predicted_Grade'])
 
     # Print the confusion matrix to console
     print("Confusion Matrix:")
     print(confusion_matrix)
-    print("\nAccuracy of the grade prediction:", accuracy)
+
+    # Print Metrics to console
+    print("\nEvaluation Metrics:")
+    print("Precision:", precision)
+    print("Recall:", recall)
+    print("F1 Score:", f1)
+    print("Accuracy:", accuracy)
+
 
 
     """
