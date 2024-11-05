@@ -5,14 +5,24 @@
     Last Modified: 05/11/2024 @ 12:34pm
 """
 
+# Import modules
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
 
+# ------------------------------------------------------------
+#                      Grade Assumptions
+# ------------------------------------------------------------
+#  Assume student grades due to missing data within the dataset
+# 
+#  The assumed grade is to be considered the 'actual' grade  
+
 # The data set has no indication of grades, so these are to fulfill the missing data
 def assume_grade(score):
+
+    # If else statements
     if score >= 76:
         return 'A'
     elif score >= 71:
@@ -23,6 +33,15 @@ def assume_grade(score):
         return 'D'
     else:
         return 'F'
+    
+
+# ------------------------------------------------------------
+#                      Grade Predictions
+# ------------------------------------------------------------
+#  Sum up numbered factors and compare against the 
+#  student average to determine grade
+# 
+#  The assumed grade is to be considered the 'actual' grade.  
 
 def predict_grade(row, df):
     # Summing up the specified factors that do the following:
@@ -55,15 +74,26 @@ def predict_grade(row, df):
     elif score_sum >= average_sum * 1:
         return 'B'
 
-    # Else if just below average (between 1x)
+    # Else if just below average (between 0.85x - 1x average)
     elif score_sum >= average_sum * 0.85:
         return 'C'
     
+    # Else if further below average (between 0.75 - 0.85x average)
     elif score_sum >= average_sum * 0.75:
         return 'D'
     
+    # Else severly below average
     else:
         return 'F'
+
+# -------------------------------
+#          Main Function
+# -------------------------------
+#  Entry point 
+#
+#  References:
+#  OpenAI ChatGPT 4o (2023) ChatGPT response to myself, 5 November.
+#  (A copy of prompts can be found below)
 
 def main():
 
