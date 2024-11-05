@@ -98,8 +98,10 @@ def main():
 
 
     """
-    Plot within confusion matrix
+    # Report Diagrams
 
+    
+    # Plot confusion Matrix:
     plt.figure(figsize=(8, 6))
     sns.heatmap(confusion_matrix, annot=True, fmt="d", cmap="Blues", cbar=False,
                 xticklabels=grade_categories, yticklabels=grade_categories)
@@ -107,6 +109,8 @@ def main():
     plt.ylabel("Predicted Grades")
     plt.title("Confusion Matrix for Grade Prediction")
     plt.show()
+
+    
     
     """
 
