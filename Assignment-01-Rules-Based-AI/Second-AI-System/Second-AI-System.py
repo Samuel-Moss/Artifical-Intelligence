@@ -124,7 +124,14 @@ def predict_grade_with_rules(row, df):
     else:
         return 'F'
 
-
+# -------------------------------
+#          Main Function
+# -------------------------------
+#  Entry point 
+#
+#  References:
+#  OpenAI ChatGPT 4o (2023) ChatGPT response to myself, 5 November.
+#  (A copy of prompts can be found below)
 def main():
     # Import data file
     df = pd.read_csv('./data/StudentPerformanceFactors.csv')
@@ -136,8 +143,7 @@ def main():
     # Define the set of all possible grades
     grade_categories = ['A', 'B', 'C', 'D', 'F']
 
-    ## ChatGPT 4o: Rules based AI how do you assign calculations using a confsion matrix for multiple grades python 
-
+    ## ChatGPT 4o: Rules based AI how do you assign calculations using a confusion matrix for multiple grades python 
     # Create a table for the confusion matrix, actual (assumed) against predicted
     confusion_matrix = pd.crosstab(df['Predicted_Grade'], df['Actual_Grade'], rownames=['Predicted'], colnames=['Actual'], dropna=False)
     confusion_matrix = confusion_matrix.reindex(index=grade_categories, columns=grade_categories, fill_value=0)
@@ -148,28 +154,20 @@ def main():
     accuracy = correct_predictions / total_predictions
 
     # Output the Confusion Matrix for analystics purposes
-    # TODO: OUTPUT A DIAGRAM FOR ASSIGNMENT TO SHOW PERFORMANCE
-    # TODO: TEST AGAINST ANOTHER DATASET
     print("Confusion Matrix:")
     print(confusion_matrix)
     print("\nAccuracy of the grade prediction:", accuracy)
 
-    # Table Heatmap
-    # Calculate percentages for each cell
-
-    # Assuming `confusion_matrix` is a pandas DataFrame
-    # Step 1: Add a totals row to the confusion matrix
-    confusion_matrix_with_totals = confusion_matrix.copy()  # Copy the original matrix
-    confusion_matrix_with_totals.loc['Total'] = confusion_matrix.sum(axis=0)  # Add row for column totals
-
-    # Step 2: Update the y-tick labels to include 'Total'
+    # Copy the original matrix and add an additional row for column totals
+    confusion_matrix_with_totals = confusion_matrix.copy()  
+    confusion_matrix_with_totals.loc['Total'] = confusion_matrix.sum(axis=0)  
     updated_labels = grade_categories + ['Actual Total']
 
-    # Step 3: Plot the updated confusion matrix
+    # Plot and display to the program operator
     plt.figure(figsize=(8, 6))
     sns.heatmap(confusion_matrix_with_totals, annot=True, fmt="d", cmap="Blues", cbar=False, 
                 xticklabels=grade_categories, yticklabels=updated_labels)
-    plt.xlabel("Actual Grades")
+    plt.xlabel("Actual (Assumed) Grades")
     plt.ylabel("Predicted Grades")
     plt.title("Confusion Matrix for Grade Prediction with Totals")
     plt.show()
