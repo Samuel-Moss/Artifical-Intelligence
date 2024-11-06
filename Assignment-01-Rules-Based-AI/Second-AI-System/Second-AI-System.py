@@ -2,6 +2,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
+
+
+# ------------------------------------------------------------
+#                      Grade Assumptions
+# ------------------------------------------------------------
+# Assume student grades due to missing data within the dataset
+
 def assume_grade(score):
     if score >= 76:
         return 'A'
@@ -14,6 +22,9 @@ def assume_grade(score):
     else:
         return 'F'
 
+# ------------------------------------------------------------
+#                      Grade Predictions
+# ------------------------------------------------------------
 def predict_grade_with_rules(row, df):
     hoursStudied = row['Hours_Studied']
     attendance = row['Attendance']
@@ -148,6 +159,12 @@ def main():
     confusion_matrix = pd.crosstab(df['Predicted_Grade'], df['Actual_Grade'], rownames=['Predicted'], colnames=['Actual'], dropna=False)
     confusion_matrix = confusion_matrix.reindex(index=grade_categories, columns=grade_categories, fill_value=0)
 
+    # Calculate and print additional metrics
+    precision = precision_score(df['Actual_Grade'], df['Predicted_Grade'], average='macro')
+    recall = recall_score(df['Actual_Grade'], df['Predicted_Grade'], average='macro')
+    f1 = f1_score(df['Actual_Grade'], df['Predicted_Grade'], average='macro')
+    accuracy = accuracy_score(df['Actual_Grade'], df['Predicted_Grade'])
+
     # Calculate accuracy using maths
     correct_predictions = sum(confusion_matrix.iloc[i, i] for i in range(len(grade_categories)))
     total_predictions = confusion_matrix.values.sum()
@@ -156,7 +173,13 @@ def main():
     # Output the Confusion Matrix for analystics purposes
     print("Confusion Matrix:")
     print(confusion_matrix)
-    print("\nAccuracy of the grade prediction:", accuracy)
+
+    # Print Metrics to console
+    print("\nEvaluation Metrics:")
+    print("Precision:", precision)
+    print("Recall:", recall)
+    print("F1 Score:", f1)
+    print("Accuracy:", accuracy)
 
     # Copy the original matrix and add an additional row for column totals
     confusion_matrix_with_totals = confusion_matrix.copy()  
