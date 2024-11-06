@@ -9,20 +9,18 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import tracemalloc
+import time
+
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
 
 # ------------------------------------------------------------
 #                      Grade Assumptions
 # ------------------------------------------------------------
-#  Assume student grades due to missing data within the dataset
-# 
-#  The assumed grade is to be considered the 'actual' grade  
+# Assume student grades due to missing data within the dataset
 
-# The data set has no indication of grades, so these are to fulfill the missing data
 def assume_grade(score):
-
-    # If else statements
     if score >= 76:
         return 'A'
     elif score >= 71:
@@ -33,20 +31,11 @@ def assume_grade(score):
         return 'D'
     else:
         return 'F'
-    
 
 # ------------------------------------------------------------
 #                      Grade Predictions
 # ------------------------------------------------------------
-#  Sum up numbered factors and compare against the 
-#  student average to determine grade
-# 
-#  The assumed grade is to be considered the 'actual' grade.  
-
 def predict_grade(row, df):
-    # Summing up the specified factors that do the following:
-        # 1 - Do scientifically contribute to student grades
-        # 2 - AND is a number value - needed to do calculations
     score_sum = (
         row['Hours_Studied'] +
         row['Attendance'] +
@@ -55,7 +44,6 @@ def predict_grade(row, df):
         row['Tutoring_Sessions']
     )
 
-    # Calculate the average of the specified factors for comparison
     average_sum = (
         df['Hours_Studied'].mean() +
         df['Attendance'].mean() +
@@ -64,25 +52,14 @@ def predict_grade(row, df):
         df['Tutoring_Sessions'].mean()
     )
 
-    # Assign predicted grade based on the sum compared to the average
-
-    # If above average (1.25x above average)
     if score_sum >= average_sum * 1.25:
         return 'A'
-    
-    # Else if around average (between 1x - 1.25x average)
     elif score_sum >= average_sum * 1:
         return 'B'
-
-    # Else if just below average (between 0.85x - 1x average)
     elif score_sum >= average_sum * 0.85:
         return 'C'
-    
-    # Else if further below average (between 0.75 - 0.85x average)
     elif score_sum >= average_sum * 0.75:
         return 'D'
-    
-    # Else severly below average
     else:
         return 'F'
 
@@ -97,13 +74,17 @@ def predict_grade(row, df):
 
 def main():
 
-    # Define the grade categories to ensure consistent order (this needs to be used within confusion matrix)
+    # Start tracemalloc for memory tracking and time tracking
+    tracemalloc.start()
+    start_time = time.time()
+
+    # Define grade categories to ensure consistent order
     grade_categories = ['A', 'B', 'C', 'D', 'F']
 
     # Import data file
     df = pd.read_csv('./data/StudentPerformanceFactors.csv')
 
-    # Apply assumed ("actual") & predicted grade
+    # Apply assumed ("actual") & predicted grades
     df['Assumed_Grade'] = df['Exam_Score'].apply(assume_grade)
     ## ChatGPT 4o: I have a function to predict grades, how do I apply it to my dataframe? (python rules based AI)
     df['Predicted_Grade'] = df.apply(lambda row: predict_grade(row, df), axis=1)
@@ -116,6 +97,13 @@ def main():
     confusion_matrix = pd.crosstab(df['Predicted_Grade'], df['Assumed_Grade'], rownames=['Predicted'], colnames=['Assumed'], dropna=False)
     confusion_matrix = confusion_matrix.reindex(index=grade_categories, columns=grade_categories, fill_value=0)
 
+    # Adding only the 'Actual Total' row to the confusion matrix
+    confusion_matrix.loc['Actual Total'] = confusion_matrix.sum(axis=0)  # Column totals
+
+    # Print the updated confusion matrix with only the total row
+    print("Confusion Matrix with Grade Distributions:")
+    print(confusion_matrix)
+
     # Calculate correct and total predictions
     correct_predictions = sum(confusion_matrix.iloc[i, i] for i in range(len(grade_categories)))
     total_predictions = confusion_matrix.values.sum()
@@ -126,10 +114,6 @@ def main():
     f1 = f1_score(df['Assumed_Grade'], df['Predicted_Grade'], average='macro')
     accuracy = accuracy_score(df['Assumed_Grade'], df['Predicted_Grade'])
 
-    # Print the confusion matrix to console
-    print("Confusion Matrix:")
-    print(confusion_matrix)
-
     # Print Metrics to console
     print("\nEvaluation Metrics:")
     print("Precision:", precision)
@@ -137,29 +121,30 @@ def main():
     print("F1 Score:", f1)
     print("Accuracy:", accuracy)
 
+    ## ChatGPT 4o: How do I calculate execution time and memory usage in my python program?
+    # End the time and the memory tracking
+    execution_time = time.time() - start_time
+    current_memory, peak_memory = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
 
+    # Print hardware metrics
+    print("\nHardware Metrics:")
+    print("Execution Time:", execution_time, "seconds")
+    print("Current Memory Usage:", current_memory / 1024, "KB")
+    print("Peak Memory Usage:", peak_memory / 1024, "KB")
 
-    """
-    # Report Diagrams
-
-    
-    # Plot confusion Matrix:
-    plt.figure(figsize=(8, 6))
+    # Plot confusion Matrix with only the 'Actual Total' row
+    plt.figure(figsize=(10, 8))
     sns.heatmap(confusion_matrix, annot=True, fmt="d", cmap="Blues", cbar=False,
-                xticklabels=grade_categories, yticklabels=grade_categories)
-    plt.xlabel("Actual Grades")
+                xticklabels=list(confusion_matrix.columns), yticklabels=list(confusion_matrix.index))
+    plt.xlabel("Actual (Assumed) Grades")
     plt.ylabel("Predicted Grades")
-    plt.title("Confusion Matrix for Grade Prediction")
+    plt.title("SYSTEM 01: Confusion Matrix for Grade Prediction with Distributions")
     plt.show()
-
-    
-    
-    """
-
 
     # Print data types
     # print("\nData Types Summary:")
     # print(df.dtypes)
 
-# Run the entry point
+# Run the main function
 main()
