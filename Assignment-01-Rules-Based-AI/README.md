@@ -40,6 +40,3 @@ This could help schools identify students who are at risk of getting lower score
 - Motivation: Students who are motivated to will likely do just that
 - Study Hours: Students who are refreshing content in their mind will be more likely to remember it
 
-## AI Model Approach
-- **Model 1:** BFS / DFS (Undecided)
-- **Model 2:** BFS/DFS/Algorithm X (Undecided)
