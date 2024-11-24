@@ -1,5 +1,5 @@
 """
-    Rule Based AI System 01
+    Rule Based AI System 02
     This Rule Based AI System predicts student grades based using a much higher set of rules.
 
     Last Modified: 24/11/2024 @ 10:39pm
