@@ -1,6 +1,6 @@
 """
     Rule Based AI System 01
-    This Rule Based AI System predicts student grades.
+    This Rule Based AI System predicts student grades on a single set of rules.
 
     Last Modified: 05/11/2024 @ 12:34pm
 """
