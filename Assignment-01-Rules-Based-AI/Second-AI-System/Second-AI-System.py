@@ -173,11 +173,6 @@ def main():
     f1 = f1_score(df['Actual_Grade'], df['Predicted_Grade'], average='macro')
     accuracy = accuracy_score(df['Actual_Grade'], df['Predicted_Grade'])
 
-    # Calculate accuracy using maths
-    correct_predictions = sum(confusion_matrix.iloc[i, i] for i in range(len(grade_categories)))
-    total_predictions = confusion_matrix.values.sum()
-    accuracy = correct_predictions / total_predictions
-
     # Output the Confusion Matrix for analystics purposes
     print("Confusion Matrix:")
     print(confusion_matrix)
